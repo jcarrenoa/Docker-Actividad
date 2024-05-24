@@ -1,13 +1,5 @@
-FROM node:14
-
+FROM python:3.9-alpine
 WORKDIR /app
-
-COPY package*.json ./
-
-RUN npm install
-
-COPY . .
-
-EXPOSE 8081
-
-CMD ["node", "app.js"]
+COPY app.py /app
+RUN pip install flask
+CMD ["python", "app.py"]

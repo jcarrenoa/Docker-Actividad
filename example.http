@@ -1,8 +1,7 @@
-
-POST https://scaling-couscous-xgv9pvg6x992v449-80.app.github.dev/notes HTTP/1.1
+POST http://localhost/auth/signup
 content-type: application/json
 
 {
-    "username": "testuser", 
+    "username": "testuserrr", 
     "password": "testpass"
 }
