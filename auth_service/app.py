@@ -2,9 +2,12 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
+users = []
+
 @app.route('/auth/signup', methods=['POST'])
 def signup():
-    # Aquí puedes agregar la lógica de registro
+    data = request.get_json()
+    users.append(data)
     return jsonify({"message": "User signed up"}), 201
 
 @app.route('/auth/login', methods=['POST'])

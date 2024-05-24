@@ -24,5 +24,3 @@ services:
     build:
       context: ./notes_service
       dockerfile: Dockerfile
-    expose:
-      - "5001"
