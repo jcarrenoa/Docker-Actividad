@@ -1,14 +1,14 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='template')
 
 users = {}
-loged_users = False
+log_users = False
 
 @app.route('/auth/signup', methods=['POST'])
 def signup():
-    global loged_users
-    if loged_users:
+    global log_users
+    if log_users:
         return jsonify({"error": "User already logged in"}), 400
     data = request.get_json()
     if data['username'] in users:
@@ -23,24 +23,29 @@ def get_signup():
 
 @app.route('/auth/login', methods=['POST'])
 def login():
-    global loged_users
-    if loged_users:
+    global log_users
+    if log_users:
         return jsonify({"error": "User already logged in"}), 400
     data = request.get_json()
     if data['username'] not in users:
         return jsonify({"error": "User not found"}), 404
     elif users[data['username']] != data['password']:
         return jsonify({"error": "Invalid password"}), 401
-    loged_users = True
+    log_users = True
     return jsonify({"message": "User logged in"}), 200
 
 @app.route('/auth/logout', methods=['POST'])
 def logout():
-    global loged_users
-    if not loged_users:
+    global log_users
+    if not log_users:
         return jsonify({"error": "User not logged in"}), 400
-    loged_users = False
+    log_users = False
     return jsonify({"message": "User logged out"}), 200
 
+@app.route('/auth/init')
+def index():
+    return render_template('index.html')
+
 if __name__ == '__main__':
+    app.debug = True
     app.run(host='0.0.0.0', port=5000)
