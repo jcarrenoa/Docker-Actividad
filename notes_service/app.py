@@ -26,11 +26,13 @@ def update_note(id):
 @app.route('/notes/<int:id>', methods=['DELETE'])
 def delete_note(id):
     global notas
+    ids = int(id)
     i = 0
-    for nota in notas:
-        if id == nota['id']:
-            notas = notas.pop(i)
-            return True, 200
+    if len(notas) > 0:
+        for nota in notas:
+            if ids == nota['id']:
+                notas = notas.pop(i)
+                return jsonify(notas), 200
     return jsonify({"error": "Nota no encontrada"}), 404
 
 @app.route('/notes/init')
