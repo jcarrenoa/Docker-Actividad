@@ -1,1 +1,1 @@
-GET http://localhost/notes
+DELETE http://localhost/notes/3

@@ -127,7 +127,7 @@
             notesList.innerHTML = '';
             notes.forEach(note => {
                 const listItem = document.createElement('li');
-                listItem.textContent = `ID: ${note.id}, User: ${note.user}, Content: ${note.content}, Number: ${note.number}`;
+                listItem.textContent = `ID: ${note[0].id}, User: ${note[0].user}, Content: ${note[0].content}, Number: ${note[0].number}`;
                 notesList.appendChild(listItem);
             });
         }
