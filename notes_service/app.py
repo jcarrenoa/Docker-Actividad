@@ -1,6 +1,6 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='template')
 
 # Almacenar notas en memoria
 notas = []
@@ -25,10 +25,18 @@ def update_note(id):
 
 @app.route('/notes/<int:id>', methods=['DELETE'])
 def delete_note(id):
-    if id < len(notas):
-        nota = notas.pop(id)
-        return jsonify(nota), 200
+    global notas
+    i = 0
+    for nota in notas:
+        if id == nota['id']:
+            notas = notas.pop(i)
+            return True, 200
     return jsonify({"error": "Nota no encontrada"}), 404
 
+@app.route('/notes/init')
+def index():
+    return render_template('index.html')
+
 if __name__ == '__main__':
+    app.debug = True
     app.run(host='0.0.0.0', port=5001)

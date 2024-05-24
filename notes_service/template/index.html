@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        form {
+            margin-bottom: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        input, button {
+            display: block;
+            margin: 10px 0;
+            width: calc(100% - 22px);
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Notes App</h1>
+
+    <h2>Add Note</h2>
+    <form id="add-note-form">
+        <label for="user">User:</label>
+        <input type="text" id="user" name="user" required>
+        <label for="note-content">Note Content:</label>
+        <input type="text" id="note-content" name="content" required>
+        <label for="note-number">Note Number:</label>
+        <input type="number" id="note-number" name="number" required>
+        <label for="note-number">Note Code:</label>
+        <input type="number" id="note-code" name="number" required>
+        <button type="submit">Add Note</button>
+    </form>
+
+    <h2>Notes List</h2>
+    <ul id="notes-list"></ul>
+
+    <h2>Delete Note</h2>
+    <form id="delete-note-form">
+        <label for="delete-note-id">Note ID to Delete:</label>
+        <input type="number" id="delete-note-id" name="id" required>
+        <button type="submit">Delete Note</button>
+    </form>
+
+    <script>
+        document.getElementById('add-note-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const user = document.getElementById('user').value;
+            const content = document.getElementById('note-content').value;
+            const number = document.getElementById('note-number').value;
+            const id = document.getElementById('note-code').value;
+
+            const response = await fetch('/notes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ user, content, number, id }),
+            });
+            const result = await response.json();
+            alert("Note added successfully!");
+            document.getElementById('add-note-form').reset();
+            loadNotes();
+        });
+
+        document.getElementById('delete-note-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const id = document.getElementById('delete-note-id').value;
+
+            const response = await fetch(`/notes/${id}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                alert("Note deleted successfully!");
+                document.getElementById('delete-note-form').reset();
+                loadNotes();
+            } else {
+                const result = await response.json();
+                alert(result.error);
+            }
+        });
+
+        async function loadNotes() {
+            const response = await fetch('/notes');
+            const notes = await response.json();
+            const notesList = document.getElementById('notes-list');
+            notesList.innerHTML = '';
+            notes.forEach(note => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `ID: ${note.id}, User: ${note.user}, Content: ${note.content}, Number: ${note.number}`;
+                notesList.appendChild(listItem);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadNotes();
+        });
+    </script>
+</body>
+</html>

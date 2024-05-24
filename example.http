@@ -1,7 +1,6 @@
-POST http://localhost/auth/signup
+DELETE http://localhost/notes/2
 content-type: application/json
 
 {
-    "username": "testuserrr", 
-    "password": "testpass"
+    "id": 2
 }
